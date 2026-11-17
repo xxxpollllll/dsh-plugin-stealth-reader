@@ -1,11 +1,19 @@
 {
   "name": "dsh-plugin-stealth-reader",
   "version": "0.12.42",
-  "private": true,
+  "private": false,
   "type": "module",
   "description": "A covert in-window novel reader for the DeepSeek Harness: local files, an isolated website library for browsing and signing in, disguise skins, and no novel text in any session transcript.",
   "license": "MIT",
   "author": "xxxpollllll",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xxxpollllll/dsh-plugin-stealth-reader.git"
+  },
+  "homepage": "https://github.com/xxxpollllll/dsh-plugin-stealth-reader#readme",
+  "bugs": {
+    "url": "https://github.com/xxxpollllll/dsh-plugin-stealth-reader/issues"
+  },
   "keywords": [
     "deepseek",
     "harness",

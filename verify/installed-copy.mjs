@@ -50,6 +50,16 @@ if (service === null) {
     const tools = []
     const routes = []
     const ctx = {
+      /* The route is registered when the web server is there, not before: a
+       * profile without one must still start. This stub has one, so the
+       * callback runs the way Cordis runs it. */
+      inject(services, callback) {
+        const keys = Array.isArray(services) ? services : Object.keys(services)
+        const scoped = { get: key => ctx.get(key) }
+        for (const key of keys) scoped[key] = ctx.get(key)
+        if (keys.every(key => scoped[key] !== undefined)) callback(scoped)
+        return () => {}
+      },
       get(name) {
         if (name === 'tools') {
           return { register(definition) { tools.push(definition); return () => {} } }
