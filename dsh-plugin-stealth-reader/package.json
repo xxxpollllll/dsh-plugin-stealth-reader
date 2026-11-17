@@ -1,5 +1,5 @@
 {
-  "name": "@xxxpollllll/dsh-plugin-stealth-reader",
+  "name": "dsh-plugin-stealth-reader",
   "version": "0.12.42",
   "private": false,
   "type": "module",
@@ -61,8 +61,5 @@
         "@deepseek-ai/dsh-client-ui-settings"
       ]
     }
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

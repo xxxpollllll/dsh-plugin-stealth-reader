@@ -147,13 +147,13 @@ is the composer's, not the reader's.
 paste the package name:
 
 ```
-@xxxpollllll/dsh-plugin-stealth-reader
+dsh-plugin-stealth-reader
 ```
 
 **For a plain `dsh web`:**
 
 ```sh
-dsh plugin --profile web add @xxxpollllll/dsh-plugin-stealth-reader
+dsh plugin --profile web add dsh-plugin-stealth-reader
 ```
 
 Then restart `dsh web`. For a custom profile, replace `web` with its name.
