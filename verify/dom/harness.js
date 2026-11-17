@@ -92,6 +92,15 @@
     /* Which surface a photograph is of. Set before any scenario runs, so a
      * photo target that a later check reaches first is still known. */
     window.__SHOT_TARGET__ = new URLSearchParams(window.location.search).get('shot')
+    /* A photograph for documentation is a photograph of the reader alone:
+     * the harness page carries the host's whole stylesheet, whose demo
+     * background would otherwise show through around the card. */
+    if (window.__SHOT_TARGET__ !== null) {
+      const clean = document.createElement('style')
+      clean.textContent = 'html,body{background:#f4f5f7;margin:0;padding:24px}'
+        + '#results{display:none}'
+      document.head.appendChild(clean)
+    }
     window.__EMPTY_LIBRARY__ = new URLSearchParams(window.location.search).has('empty')
     window.__WITH_SITES__ = new URLSearchParams(window.location.search).has('sites')
     window.__BROKEN_ROUTE__ = new URLSearchParams(window.location.search).has('broken')
@@ -354,10 +363,11 @@
         await settle()
         const page = document.querySelector('.sr-shop')
         if (page) {
+          /* The frame is the page's own box, nothing outside it. */
           const box = page.getBoundingClientRect()
           window.__CARD_BOX__ = {
-            x: box.x + window.scrollX, y: box.y + window.scrollY,
-            width: box.width, height: box.height,
+            x: Math.ceil(box.x + window.scrollX), y: Math.ceil(box.y + window.scrollY),
+            width: Math.floor(box.width), height: Math.floor(box.height),
           }
           window.__SHOT_READY__ = true
           for (let attempt = 0; attempt < 100 && !window.__SHOT_DONE__; attempt += 1) await wait(100)
@@ -697,16 +707,26 @@
      * The driver asks for the picture here, while the card is on screen: the
      * run goes on after the picture is taken, so every check still happens. */
     if (window.__SHOT_TARGET__ === 'card') {
-      const card = dockHost.querySelector('.sr-strip')
-      if (card) {
-        card.scrollIntoView({ block: 'center' })
+      /* The panel is what a reader sees; the strip also carries the folded
+       * entry above it, which is a different thing to look at. */
+      const panel = dockHost.querySelector('.sr-strip-panel') || dockHost.querySelector('.sr-strip')
+      /* The folded entry sits above the panel and would peek into the frame:
+       * a photograph of the reader shows the reading, not the door. */
+      for (const node of dockHost.querySelectorAll('button.sr-strip-mark, button.sr-strip-bar')) {
+        node.style.visibility = 'hidden'
+      }
+      if (panel) {
+        panel.scrollIntoView({ block: 'center' })
         await settle()
-        const box = card.getBoundingClientRect()
+        const box = panel.getBoundingClientRect()
+        /* The frame is the panel's own box, nothing outside it: a rounded
+         * corner of the element behind would otherwise show in the corner of
+         * the picture. */
         window.__CARD_BOX__ = {
-          x: box.x + window.scrollX,
-          y: box.y + window.scrollY,
-          width: box.width,
-          height: box.height,
+          x: Math.ceil(box.x + window.scrollX),
+          y: Math.ceil(box.y + window.scrollY),
+          width: Math.floor(box.width),
+          height: Math.floor(box.height),
         }
       }
       window.__SHOT_READY__ = true
@@ -924,10 +944,10 @@
           if (window.__SHOT_TARGET__ === 'catalog' && catalog) {
             const box = catalog.getBoundingClientRect()
             window.__CARD_BOX__ = {
-              x: box.x + window.scrollX,
-              y: box.y + window.scrollY,
-              width: box.width,
-              height: box.height,
+              x: Math.ceil(box.x + window.scrollX),
+              y: Math.ceil(box.y + window.scrollY),
+              width: Math.floor(box.width),
+              height: Math.floor(box.height),
             }
             window.__SHOT_READY__ = true
             for (let attempt = 0; attempt < 100 && !window.__SHOT_DONE__; attempt += 1) await wait(100)

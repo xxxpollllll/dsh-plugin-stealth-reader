@@ -4,6 +4,14 @@ An in-window novel reader for the DeepSeek Harness. It reads local files and
 web novels, and keeps novel text out of your conversations. Where it lives is
 your choice: a column on the right, or a quiet line above the input box.
 
+English | [中文](README.zh.md)
+
+![The reading card, light theme](docs/card-light.png)
+
+![The reading card, dark theme](docs/card-dark.png)
+
+![The book catalog](docs/catalog.png)
+
 ## Install
 
 Pick the way that matches how your Harness runs.

@@ -303,10 +303,10 @@ for (let attempt = 0; attempt < 100 && !done; attempt += 1) {
         const shot = await send('Page.captureScreenshot', {
           format: 'png',
           clip: {
-            x: Math.max(0, box.x - 8),
-            y: Math.max(0, box.y - 8),
-            width: box.width + 16,
-            height: box.height + 16,
+            x: Math.max(0, box.x),
+            y: Math.max(0, box.y),
+            width: box.width,
+            height: box.height,
             scale: 2,
           },
         })

@@ -29,7 +29,8 @@
     "locale",
     "cordis.patch.yml",
     "icon.svg",
-    "README.md"
+    "README.md",
+    "docs"
   ],
   "engines": {
     "node": ">=22"
