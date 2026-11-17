@@ -6,6 +6,19 @@ your choice: a column on the right, or a quiet line above the input box.
 
 English | [中文](README.zh.md)
 
+The card as it sits above the input box in the Desktop app. The chapter text and
+the book's name are masked in this picture: it shows the reader's own shape, not
+what was being read.
+
+![The reading card above the composer](docs/card-real.png)
+
+Folded, the same card is one quiet line in the composer stack. This one is using
+a cover story: it reads as a sync summary, not as a book.
+
+![The folded card](docs/card-folded.png)
+
+Unmasked, with synthetic text, in both themes:
+
 ![The reading card, light theme](docs/card-light.png)
 
 ![The reading card, dark theme](docs/card-dark.png)
@@ -569,6 +582,8 @@ The library drawer keeps its real wording, because you open it deliberately.
 The disguise covers what is visible without an action.
 
 ## Adding books
+
+![The book page](docs/book-page.png)
 
 Open the panel and press **☰** to open the library drawer, then **Add a
 document…**. In the side column the drawer is inside the panel, and in the
