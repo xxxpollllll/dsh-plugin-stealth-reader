@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+dist/
+*.tgz
+
+# Test scratch that a run leaves behind
+/tmp-*/
+*.log
+
+# Editor and OS noise
+.DS_Store
+.vscode/
+.idea/
+*.swp
+
+# Local secrets: a reader's own library, cache and settings never leave the
+# machine that made them, so they must never be committed by accident.
+.env
+.env.*
+*.local
+.dsh/
+
+# A sample book is not source code. The tests build their own synthetic
+# chapters in a temporary directory, so nothing here needs a file that may be
+# a real novel. Keeping it out means a public repository cannot carry one by
+# accident.
+/sample/

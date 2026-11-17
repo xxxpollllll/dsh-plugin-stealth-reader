@@ -1,0 +1,56 @@
+{
+  "name": "dsh-plugin-stealth-reader",
+  "version": "0.12.42",
+  "private": true,
+  "type": "module",
+  "description": "A covert in-window novel reader for the DeepSeek Harness: local files, an isolated website library for browsing and signing in, disguise skins, and no novel text in any session transcript.",
+  "license": "MIT",
+  "author": "stealth-reader contributors",
+  "keywords": [
+    "deepseek",
+    "harness",
+    "dsh",
+    "dsh-plugin",
+    "reader",
+    "novel",
+    "epub",
+    "privacy"
+  ],
+  "icon": "./icon.svg",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "lib",
+    "locale",
+    "cordis.patch.yml",
+    "icon.svg",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-renderer",
+        "@deepseek-ai/dsh-client-ui-layout",
+        "@deepseek-ai/dsh-client-shortcuts",
+        "@deepseek-ai/dsh-client-ui-workspace",
+        "@deepseek-ai/dsh-client-ui-conversation",
+        "@deepseek-ai/dsh-client-ui-sidebar-right",
+        "@deepseek-ai/dsh-client-ui-settings"
+      ]
+    }
+  }
+}
