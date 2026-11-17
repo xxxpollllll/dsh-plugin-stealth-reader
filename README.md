@@ -7,6 +7,18 @@ path, and no chapter text ever reaches a session transcript.
 
 English | [中文](README.zh.md)
 
+![The reading card above the composer, with the chapter text masked](docs/images/card-real.png)
+
+*The card as it sits above the input box in the Desktop app. The chapter text
+and the book's name are masked in this picture: what it shows is the reader's
+own shape — the text block, the progress hairline, the percent, and the row of
+controls.*
+
+Folded, the card is one quiet line in the composer stack. This one is using a
+cover story: it reads as a sync summary, not as a book.
+
+![The folded card](docs/images/card-folded.png)
+
 ![The reading card, light theme](docs/images/card-light.png)
 
 ![The reading card, dark theme](docs/images/card-dark.png)

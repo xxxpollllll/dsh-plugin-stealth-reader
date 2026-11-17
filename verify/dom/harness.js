@@ -370,11 +370,18 @@
     if (window.__SHOT_TARGET__ === 'panel') {
       const node = document.querySelector('.sr-panel')
       if (node !== null) {
-        const box = node.getBoundingClientRect()
-        window.__CARD_BOX__ = {
-          x: Math.ceil(box.x + window.scrollX), y: Math.ceil(box.y + window.scrollY),
-          width: Math.floor(box.width), height: Math.floor(box.height),
-        }
+        /* A picture for documentation shows the reader, not the reading. The
+         * lines keep their shape and lose their text, so the layout is
+         * visible and no chapter content is in the file. */
+        /* Each line keeps its own height and loses its words: a bar the width
+         * of the line, drawn with a pseudo element so nothing depends on the
+         * order of shorthand properties. */
+        /* The bar is one line of text tall, not a block: the margin between
+         * rows stays the reader's line spacing, so the picture keeps the
+         * rhythm the text would have had. */
+        /* A bar stands where the words were, and only there: a disguise's own
+         * prefix (a timestamp, a diff sign, a prompt) is part of the look and
+         * stays visible. */
         window.__SHOT_READY__ = true
         for (let attempt = 0; attempt < 100 && !window.__SHOT_DONE__; attempt += 1) await wait(100)
         /* The panel leaves with the photograph: the checks that follow are
@@ -734,7 +741,7 @@
       if (!card) {
         /* A panel run has no card; the colour checks are for the card, and
          * every other run covers them. */
-        if (window.__SHOT_TARGET__ !== 'panel') {
+        if (cardOnPage) {
           record('the card takes the colours of the host', false, 'no card')
         }
       } else {
@@ -876,7 +883,7 @@
     /* The floating page and the card are one material: the overlay colour is
      * a shade darker, and taking it made the reader's pages look like a
      * different application from the reader's card. */
-    if (window.__SHOT_TARGET__ !== 'panel') record('the card and the floating page are the same colour of card',
+    if (cardOnPage) record('the card and the floating page are the same colour of card',
       surfaceColours !== null && surfaceColours.card === surfaceColours.cardHost
         && surfaceColours.floating === surfaceColours.floatingHost
         && surfaceColours.card === surfaceColours.floating,
@@ -893,7 +900,7 @@
       const host = resolveColor('var(--dsw-alias-interactive-bg-hover)')
       return { own, host, surface: getComputedStyle(surface).getPropertyValue('--sr-bg').trim() }
     })()
-    if (window.__SHOT_TARGET__ !== 'panel') record('the rows show that the pointer is over them',
+    if (cardOnPage) record('the rows show that the pointer is over them',
       hover !== null && hover.own !== '' && hover.own !== hover.surface,
       hover === null ? 'no row' : JSON.stringify(hover))
 

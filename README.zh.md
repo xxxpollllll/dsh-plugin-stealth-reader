@@ -6,6 +6,16 @@
 
 [English](README.md) | 中文
 
+![输入框上方的阅读卡片，章节正文已遮罩](docs/images/card-real.png)
+
+*卡片在桌面版里、输入框上方的真实样子。图中章节正文和书名已遮罩：这张图要展示的是
+阅读器本身的形状——文字区、进度细线、百分比，以及那一排控件。*
+
+折叠起来，卡片就是输入区里一行安静的横条。这一张用的是封面故事：它读起来像一条同步
+摘要，不像一本书。
+
+![折叠后的卡片](docs/images/card-folded.png)
+
 ![阅读卡片，浅色](docs/images/card-light.png)
 
 ![阅读卡片，深色](docs/images/card-dark.png)

@@ -92,6 +92,9 @@ const SYNTHETIC = [
  * settings with that skin, so the card can be shown naming the book or
  * looking like a log. */
 const SKIN = (process.argv.find(argument => argument.startsWith('--skin=')) || '').slice('--skin='.length)
+/* The folded card is either a small mark or a one-line bar; `--shape=` picks
+ * which, so both shapes can be shown. */
+const SHAPE = (process.argv.find(argument => argument.startsWith('--shape=')) || '').slice('--shape='.length)
 const SETTINGS = {
   placement: 'strip',
   skin: SKIN === '' ? 'plain' : SKIN,
@@ -99,6 +102,7 @@ const SETTINGS = {
   fontSize: 15,
   lineHeight: 1.9,
   cardFoldable: true,
+  ...(SHAPE === '' ? {} : { cardFoldedShape: SHAPE }),
   cardFoldMode: 'auto',
   cardFoldedShape: 'mark',
   cardFoldDelay: 80,
