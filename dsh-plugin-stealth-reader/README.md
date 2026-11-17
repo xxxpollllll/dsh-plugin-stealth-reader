@@ -530,6 +530,17 @@ lands on the same sentence whichever surface it is read on.
 
 ## Disguise skins
 
+The plain skin names the book; the others do not. They number the documents and
+dress the lines as something else — a log, a shell, a code review.
+
+![The plain skin](docs/skin-plain.png)
+
+![The log skin](docs/skin-log.png)
+
+![The terminal skin](docs/skin-terminal.png)
+
+![The diff skin](docs/skin-diff.png)
+
 | Skin | Look |
 | --- | --- |
 | Log | Grey monospace paragraphs with `[time] INFO` prefixes |

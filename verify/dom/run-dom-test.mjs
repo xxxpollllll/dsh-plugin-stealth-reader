@@ -88,9 +88,13 @@ const SYNTHETIC = [
   '这是第七行合成文本，指针移开再回来之后文本不会少掉一行。',
   '这是第八行合成文本，测量用的合成章节到这里结束。',
 ]
+/* A photograph of a disguise needs the disguise: `--skin=<key>` reads the
+ * settings with that skin, so the card can be shown naming the book or
+ * looking like a log. */
+const SKIN = (process.argv.find(argument => argument.startsWith('--skin=')) || '').slice('--skin='.length)
 const SETTINGS = {
   placement: 'strip',
-  skin: 'plain',
+  skin: SKIN === '' ? 'plain' : SKIN,
   scrollMode: 'chapter',
   fontSize: 15,
   lineHeight: 1.9,

@@ -151,8 +151,18 @@ macOS 上是 `Control+Option`（`⌃⌥`），不是 `Command`。macOS 的系统
 
 ## 伪装皮肤
 
-默认皮肤会显示书名。其他皮肤不会：它们把文档编号，并隐藏书名、章节标题和样章
-文字。当「你在读什么」本身就是需要藏起来的东西时，选一个。
+`plain` 皮肤显示书名；其他三个不显示。它们把文档编号，并且把每一行装扮成别的
+东西——一份日志、一个终端、一次代码审查。
+
+![plain 皮肤](docs/skin-plain.png)
+
+![log 皮肤](docs/skin-log.png)
+
+![terminal 皮肤](docs/skin-terminal.png)
+
+![diff 皮肤](docs/skin-diff.png)
+
+当「你在读什么」本身就是需要藏起来的东西时，选一个。
 
 ## 添加书
 

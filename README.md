@@ -79,9 +79,32 @@ one confirmation puts the book in the library.
 
 ## Disguise skins
 
-The default skin names the book. The others do not: they number the documents
-instead, and hide book names, chapter titles and sample text. Pick one when the
-name of what you are reading is the thing that would give it away.
+The plain skin names the book and shows the text as text:
+
+![The plain skin](docs/images/skin-plain.png)
+
+The others do not. They number the documents instead of naming them, and they
+dress the lines as something else:
+
+| Skin | What the panel reads as | The lines as |
+| --- | --- | --- |
+| `plain` | the book's own name | text |
+| `log` (default) | `app.log` | a log: timestamp, `INFO`/`WARN`/`ERROR` |
+| `terminal` | `session` | a shell: a prompt, green output, dark ground |
+| `diff` | `review.diff` | a code review: `+`/`-`, line numbers, a hunk header |
+
+![The log skin](docs/images/skin-log.png)
+
+![The terminal skin](docs/images/skin-terminal.png)
+
+![The diff skin](docs/images/skin-diff.png)
+
+What a disguise hides: the book's name, the chapter title, and any sample text.
+What it keeps: how far through the book you are, and the shape of the reading
+surface — so a glance at the screen reads as work, not as a novel.
+
+Pick one when the name of what you are reading is the thing that would give it
+away.
 
 ## Keyboard
 

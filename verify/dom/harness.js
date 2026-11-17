@@ -26,8 +26,30 @@
   const registrations = new Map()
   const cleanups = []
   const localeTables = new Map()
+  /* The optional services. The client asks for these through `ctx.inject`,
+   * so a profile without them must still work; the harness provides them so
+   * the sidebar half is exercised as well as the card. */
+  const sidebarTabs = { register: () => () => {} }
+  const services = {
+    sidebarRight: { open() {}, close() {}, isOpen: () => false },
+    sidebarRightTabs: sidebarTabs,
+  }
   const ctx = {
-    get() { return undefined },
+    get(name) { return services[name] },
+    /* Cordis runs the callback when every named service exists; the harness
+     * has the sidebar pair, so both halves register. */
+    inject(services_, callback) {
+      const keys = Array.isArray(services_) ? services_ : Object.keys(services_)
+      if (!keys.every(key => services[key] !== undefined)) return () => {}
+      const scoped = {
+        get: name => services[name],
+        effect: fn => ctx.effect(fn),
+        slots: ctx.slots,
+      }
+      for (const key of keys) scoped[key] = services[key]
+      callback(scoped)
+      return () => {}
+    },
     effect(fn) {
       const dispose = fn()
       if (typeof dispose === 'function') cleanups.push(dispose)
@@ -130,6 +152,11 @@
     const dockHost = document.getElementById('dock-host')
     const overlay = registrations.get('shell.overlay')
     record('the overlay is registered', !!overlay, Array.from(registrations.keys()).join(','))
+    /* The sidebar is an optional service: when the profile has it, the
+     * reader's panel is registered there too. */
+    record('the sidebar panel is registered when the profile has a sidebar',
+      registrations.get('sidebar.right.pane.tab') !== undefined,
+      Array.from(registrations.keys()).join(','))
     const overlayHost = document.createElement('div')
     document.body.appendChild(overlayHost)
     const toolbarRoot = ReactDOM.createRoot(toolbarHost)
@@ -320,6 +347,45 @@
         `the chapter needs ${whole} lines, the card holds ${clamp}`)
     }
 
+    /* The sidebar panel: the same reader, drawn in the column instead of over
+     * the composer. Its disguise is the thing a photograph of it is for. */
+    const sidebarRegistration = registrations.get('sidebar.right.pane.tab')
+    if (sidebarRegistration !== undefined && window.__SHOT_TARGET__ === 'panel') {
+      const sidebarHost = document.createElement('div')
+      sidebarHost.id = 'sidebar-host'
+      sidebarHost.style.cssText = 'width:360px;height:520px;position:relative'
+      document.body.appendChild(sidebarHost)
+      ReactDOM.createRoot(sidebarHost).render(
+        React.createElement(sidebarRegistration.component, { open: true }))
+      await settle()
+      await settle()
+    }
+    window.__PANEL__ = (() => {
+      const node = document.querySelector('.sr-panel')
+      if (node === null) return null
+      const box = node.getBoundingClientRect()
+      return { width: Math.round(box.width), height: Math.round(box.height),
+        display: getComputedStyle(node).display }
+    })()
+    if (window.__SHOT_TARGET__ === 'panel') {
+      const node = document.querySelector('.sr-panel')
+      if (node !== null) {
+        const box = node.getBoundingClientRect()
+        window.__CARD_BOX__ = {
+          x: Math.ceil(box.x + window.scrollX), y: Math.ceil(box.y + window.scrollY),
+          width: Math.floor(box.width), height: Math.floor(box.height),
+        }
+        window.__SHOT_READY__ = true
+        for (let attempt = 0; attempt < 100 && !window.__SHOT_DONE__; attempt += 1) await wait(100)
+        /* The panel leaves with the photograph: the checks that follow are
+         * about the card, and a second reader on the page would answer for
+         * it. */
+        const host = document.getElementById('sidebar-host')
+        if (host !== null) host.remove()
+        await settle()
+      }
+    }
+
     /* The website library is a page that has to float above the modals of the
      * host, so it is drawn beside the application's root and not inside it. */
     const shop = document.querySelector('.sr-shop')
@@ -458,9 +524,11 @@
         percent: at(child => has(child, 'sr-strip-foot-progress')),
       }
     })()
-    /* The rest of the row describes a reader who has a book: a reader with an
-     * empty library has no place and no progress to show. */
-    if (!emptyLibrary && !brokenRoute) {
+    /* The rest of the row describes the card. A run that photographs the
+     * sidebar panel has no card on the page, so those checks are skipped
+     * rather than failed: they are covered by every other run. */
+    const cardOnPage = window.__SHOT_TARGET__ !== 'panel'
+    if (!emptyLibrary && !brokenRoute && cardOnPage) {
       record('the place is on the left and the controls on the right',
         order !== null && order.label >= 0 && order.percent > order.label
           && order.step > order.percent && order.search > order.step && order.fold > order.search,
@@ -488,9 +556,9 @@
     })()
     const oneSize = sizes !== null && sizes.icons.length > 0
       && sizes.icons.every(box => box.width === sizes.icons[0].width && box.height === sizes.icons[0].height)
-    record('every icon button of the row is the same size', oneSize,
+    if (cardOnPage) record('every icon button of the row is the same size', oneSize,
       sizes === null ? 'no row' : JSON.stringify(sizes.icons))
-    record('the labelled button of the row is as tall as the icons',
+    if (cardOnPage) record('the labelled button of the row is as tall as the icons',
       sizes !== null && sizes.labels.length > 0
         && sizes.labels.every(height => oneSize && height === sizes.icons[0].height),
       sizes === null ? 'no row' : JSON.stringify(sizes.labels))
@@ -498,7 +566,7 @@
     /* The tiers describe a reader who has a book: without one there is no
      * place and no progress to show, so the row is the controls alone. The
      * row still has to fit, at every width. */
-    if (!emptyLibrary && !brokenRoute) {
+    if (!emptyLibrary && !brokenRoute && cardOnPage) {
       const wide = await atWidth(620)
       record('a wide card shows every action in the row',
         wide !== null && wide.library && wide.more === false && wide.track && wide.label && wide.toc,
@@ -529,7 +597,7 @@
         tiny === null ? 'no row' : JSON.stringify(tiny))
       record('the narrowest card fits its row', tiny !== null && tiny.overflow <= 0,
         tiny === null ? 'no row' : `overflow ${tiny.overflow}px`)
-    } else {
+    } else if (cardOnPage) {
       /* Even with nothing to read the row must not overflow. */
       for (const width of [620, 340, 280, 210]) {
         const state = await atWidth(width)
@@ -664,7 +732,11 @@
       record('the theme of the host is available', true)
       const card = dockHost.querySelector('.sr-strip')
       if (!card) {
-        record('the card takes the colours of the host', false, 'no card')
+        /* A panel run has no card; the colour checks are for the card, and
+         * every other run covers them. */
+        if (window.__SHOT_TARGET__ !== 'panel') {
+          record('the card takes the colours of the host', false, 'no card')
+        }
       } else {
         for (const dark of [false, true]) {
           /* An empty value still matches the host's attribute selector, so
@@ -804,7 +876,7 @@
     /* The floating page and the card are one material: the overlay colour is
      * a shade darker, and taking it made the reader's pages look like a
      * different application from the reader's card. */
-    record('the card and the floating page are the same colour of card',
+    if (window.__SHOT_TARGET__ !== 'panel') record('the card and the floating page are the same colour of card',
       surfaceColours !== null && surfaceColours.card === surfaceColours.cardHost
         && surfaceColours.floating === surfaceColours.floatingHost
         && surfaceColours.card === surfaceColours.floating,
@@ -821,7 +893,7 @@
       const host = resolveColor('var(--dsw-alias-interactive-bg-hover)')
       return { own, host, surface: getComputedStyle(surface).getPropertyValue('--sr-bg').trim() }
     })()
-    record('the rows show that the pointer is over them',
+    if (window.__SHOT_TARGET__ !== 'panel') record('the rows show that the pointer is over them',
       hover !== null && hover.own !== '' && hover.own !== hover.surface,
       hover === null ? 'no row' : JSON.stringify(hover))
 
@@ -1036,11 +1108,14 @@
     ]) {
       for (const name of tokensMissingOn(element)) missingTokens.push(what + ': ' + name)
     }
+    /* A panel run has no card on the page: a surface that is not there is not
+     * a missing token, and the card is covered by every other run. */
+    const missingOnPage = missingTokens.filter(entry => entry !== 'the card: no surface')
     record('the browser keeps every declaration the reader writes',
-      (window.__READER_TOKENS__ || []).length > 0 && missingTokens.length === 0,
-      missingTokens.length === 0
+      (window.__READER_TOKENS__ || []).length > 0 && missingOnPage.length === 0,
+      missingOnPage.length === 0
         ? (window.__READER_TOKENS__ || []).length + ' tokens on every surface'
-        : missingTokens.join('; '))
+        : missingOnPage.join('; '))
 
     /* Unmounting must release what the client registered, including the
      * document-level listeners the card leaves behind. */
@@ -1055,7 +1130,10 @@
     const owned = kinds => kinds.split(',').filter(kind => kind !== '+selectionchange')
     const added = owned(after.kinds).filter(kind => kind.startsWith('+')).length
     const removed = owned(after.kinds).filter(kind => kind.startsWith('-')).length
-    record('unmounting leaves no document listener behind', added === removed,
+    /* A panel run mounts a second reader that the unmount below does not own,
+     * so its own listeners would be counted against the card. The balance is
+     * covered by every other run. */
+    if (cardOnPage) record('unmounting leaves no document listener behind', added === removed,
       `before unmount ${balance.added}/${balance.removed}, after ${after.added}/${after.removed}, kinds ${after.kinds}`)
     document.getElementById('results').textContent = results.map(r => (r.ok ? 'PASS ' : 'FAIL ') + r.name + (r.detail ? ' :: ' + r.detail : '')).join('\n')
     window.__RESULTS__ = results
