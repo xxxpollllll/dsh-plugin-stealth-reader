@@ -33,13 +33,13 @@ Pick the way that matches how your Harness runs.
 **Add plugin**, and paste the package name:
 
 ```
-dsh-plugin-stealth-reader
+@xxxpollllll/dsh-plugin-stealth-reader
 ```
 
 **From a terminal, for a plain `dsh web`.**
 
 ```sh
-dsh plugin --profile web add dsh-plugin-stealth-reader
+dsh plugin --profile web add @xxxpollllll/dsh-plugin-stealth-reader
 ```
 
 Then restart `dsh web`. For a custom profile, replace `web` with its name.
