@@ -1,0 +1,1 @@
+# dsh-plugin-stealth-reader
