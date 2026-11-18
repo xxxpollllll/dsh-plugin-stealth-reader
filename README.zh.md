@@ -129,13 +129,13 @@
 **在 DeepSeek Harness 桌面版里：**打开 **插件**，选 **添加插件**，粘贴包名：
 
 ```
-dsh-plugin-stealth-reader
+@xxxpollllll/dsh-plugin-stealth-reader
 ```
 
 **在用 `dsh web` 时：**
 
 ```sh
-dsh plugin --profile web add dsh-plugin-stealth-reader
+dsh plugin --profile web add @xxxpollllll/dsh-plugin-stealth-reader
 ```
 
 然后重启 `dsh web`。如果是自定义 profile，把 `web` 换成它的名字。
